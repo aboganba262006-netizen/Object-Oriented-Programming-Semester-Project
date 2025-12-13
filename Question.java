@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 public class Question {
     String text;
     String[] options;
@@ -29,4 +30,17 @@ public class Question {
             System.out.println("Wrong!");
         }
     }
+
+    public String getQuestionText() {
+        return text;
+    }
+
+    public String[] getOptions() {
+        return options;
+    }
+
+    public int getCorrectOption() {
+        return correct;
+    }
+
 }

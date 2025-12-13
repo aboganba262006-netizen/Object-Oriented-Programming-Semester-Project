@@ -16,6 +16,6 @@ public class TeacherAssistant {
     
         @Override
         public String toString() {
-            return "Doctor Name: " + name + ", ID: " + ID;
+            return "Asistant Name: " + name + ", ID: " + ID;
         }
     }

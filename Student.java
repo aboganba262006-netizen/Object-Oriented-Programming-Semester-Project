@@ -1,19 +1,13 @@
-public class Student {
-    String name;
-    String ID;
-    public Student(String name, String ID) {
-        this.name = name;
-        this.ID = ID;
+public class Student extends Person {
+
+    public Student(String name, String email, String password) {
+        super(name, email, password);
     }
-    public String getName() {
-        return name;
+
+    @Override
+    public void displayMenu() {
+        System.out.println("Student Menu:");
+        System.out.println("1. View Courses");
+        System.out.println("2. Take Quiz");
     }
-    public String getID() {
-        return ID;
-    }
-    
-        @Override
-        public String toString() {
-            return "Student Name: " + name + ", ID: " + ID;
-        }
-    }
+}
