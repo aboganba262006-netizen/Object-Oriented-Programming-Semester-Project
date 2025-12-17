@@ -2,14 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Admin extends Person {
-
+    private static String password = "1234";
     private List<Course> managedCourses;
+
+    private static Quiz currentQuiz;
 
     public Admin(String name, String email, String password) {
         super(name, email, password);
         this.managedCourses = new ArrayList<>();
+        this.currentQuiz = null;
     }
-    
+
     @Override
     public void displayMenu() {
         System.out.println("Admin Menu:");
@@ -31,6 +34,7 @@ public class Admin extends Person {
     public void createQuiz(Course course, Quiz quiz) {
         if (managedCourses.contains(course)) {
             course.addQuiz(quiz);
+            this.currentQuiz = quiz;
             System.out.println("Quiz created: " + quiz.getTitle() + " in " + course.getCourseName());
         } else {
             System.out.println("Admin does not manage this course.");
@@ -55,5 +59,21 @@ public class Admin extends Person {
 
     public List<Course> getManagedCourses() {
         return managedCourses;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setPassword(String password) {
+        Admin.password = password;
+    }
+
+    public static Quiz getCurrentQuiz() {
+        return currentQuiz;
+    }
+
+    public void setCurrentQuiz(Quiz quiz) {
+        this.currentQuiz = quiz ;
     }
 }

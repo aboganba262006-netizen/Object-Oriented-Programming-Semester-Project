@@ -1,0 +1,5 @@
+24100;7th;what is a super loop;for loop;while loop;foreach loop;other;B;1
+24100;7th;which loop is called a specific number of times?;for loop;while loop;foreach loop;other;A;1
+24100;12th;question 1;a;b;c;d;A;1
+24100;12th;question 2;a;b;c;d;B;1
+

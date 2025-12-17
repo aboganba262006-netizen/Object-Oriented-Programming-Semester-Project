@@ -1,4 +1,3 @@
-
 public class Doctor {
     private String name;
     private String ID;

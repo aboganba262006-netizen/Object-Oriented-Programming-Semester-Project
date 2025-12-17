@@ -13,11 +13,11 @@ abstract class Person {
     }
 
     public void login(){
-        System.out.println(name + " has logged in");  
+        System.out.println(name + " has logged in");
     }
 
     public void logout(){
-        System.out.println(name + " has logged out");  
+        System.out.println(name + " has logged out");
     }
 
     public abstract void displayMenu();
