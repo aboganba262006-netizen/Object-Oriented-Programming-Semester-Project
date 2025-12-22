@@ -81,14 +81,23 @@ public class Question {
     }
 
     public static Question fromFileFormat(String[] data) {
-        String text = data[1];
-        String choiceA = data[2];
-        String choiceB = data[3];
-        String choiceC = data[4];
-        String choiceD = data[5];
-        char correctChoice = data[6].charAt(0);
-        int score = Integer.parseInt(data[7]);
-        return new Question(text, choiceA, choiceB, choiceC, choiceD, correctChoice, score);
+        if (data.length < 8) {
+            System.out.println("Error: Malformed question data.");
+            return null;
+        }
+        try {
+            String text = data[1];
+            String choiceA = data[2];
+            String choiceB = data[3];
+            String choiceC = data[4];
+            String choiceD = data[5];
+            char correctChoice = data[6].charAt(0);
+            int score = Integer.parseInt(data[7]);
+            return new Question(text, choiceA, choiceB, choiceC, choiceD, correctChoice, score);
+        } catch (Exception e) {
+            System.out.println("Error parsing question data: " + e.getMessage());
+            return null;
+        }
     }
 
     public String[] getOptions() {

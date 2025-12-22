@@ -1,1 +1,1 @@
-Quiz.lo
+takeQuiz

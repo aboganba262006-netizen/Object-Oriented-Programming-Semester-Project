@@ -4,8 +4,8 @@ import java.util.ArrayList;
 public class Student extends Person {
     private ArrayList<Course> myCourses;
 
-    public Student(String name, String email, String password) {
-        super(name, email, password);
+    public Student(String fname, String lname,String email, String password) {
+        super(fname, lname, email, password);
         myCourses = new ArrayList<>();
     }
 

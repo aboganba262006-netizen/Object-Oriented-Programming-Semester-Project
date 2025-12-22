@@ -1,3 +1,5 @@
 oop;24100;3.0
 database;12345;3.0
 digital logic;1234567;3.0
+calculus;231223;3.0
+database;234543;3.0

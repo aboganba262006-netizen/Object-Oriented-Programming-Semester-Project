@@ -7,10 +7,10 @@ public class Admin extends Person {
 
     private static Quiz currentQuiz;
 
-    public Admin(String name, String email, String password) {
-        super(name, email, password);
+    public Admin(String fname, String lname,String email, String password) {
+        super(fname, lname,email, password);
         this.managedCourses = new ArrayList<>();
-        this.currentQuiz = null;
+        Admin.currentQuiz = null;
     }
 
     @Override

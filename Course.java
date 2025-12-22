@@ -112,16 +112,36 @@ public class Course {
             );
         }
     }
-    public void loadQuizzesForThisCourse() {
-        Quiz quiz = Quiz.loadQuizFromFile(
-                null,
-                this.ID,
-                "quizzes.txt",
-                "questions.txt"
-        );
     
-        if (quiz != null) {
-            this.quizzes.add(quiz);
+    public void loadQuizzesForThisCourse() {
+        quizzes.clear();
+
+        try {
+            BufferedReader quizReader = new BufferedReader(new FileReader("quizzes.txt"));
+            String line;
+
+            while ((line = quizReader.readLine()) != null) {
+                String[] quizData = line.split(";");
+                int fileCourseId = Integer.parseInt(quizData[0]);
+                String quizTitle = quizData[1];
+
+                if (fileCourseId == this.ID) {
+                    Quiz quiz = Quiz.loadQuizFromFile(
+                            quizTitle,
+                            this.ID,
+                            "quizzes.txt",
+                            "questions.txt"
+                    );
+                    if (quiz != null) {
+                        quizzes.add(quiz);
+                    } else {
+                        System.out.println("Skipping quiz due to loading error: " + quizTitle);
+                    }
+                }
+            }
+            quizReader.close();
+        } catch (Exception e) {
+            System.out.println("Error loading quizzes: " + e.getMessage());
         }
     }
     
