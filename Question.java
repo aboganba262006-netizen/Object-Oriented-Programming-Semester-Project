@@ -86,13 +86,13 @@ public class Question {
             return null;
         }
         try {
-            String text = data[1];
-            String choiceA = data[2];
-            String choiceB = data[3];
-            String choiceC = data[4];
-            String choiceD = data[5];
-            char correctChoice = data[6].charAt(0);
-            int score = Integer.parseInt(data[7]);
+            String text = data[2];
+            String choiceA = data[3];
+            String choiceB = data[4];
+            String choiceC = data[5];
+            String choiceD = data[6];
+            char correctChoice = data[7].charAt(0); // Correctly parse the correct choice as a character
+            int score = Integer.parseInt(data[8]); // Parse the score as an integer
             return new Question(text, choiceA, choiceB, choiceC, choiceD, correctChoice, score);
         } catch (Exception e) {
             System.out.println("Error parsing question data: " + e.getMessage());

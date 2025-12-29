@@ -23,39 +23,44 @@ public class Quiz {
     }
 
     public void takeQuiz() {
-        java.util.Scanner sc = new java.util.Scanner(System.in);
-        int totalScore = 0;
-        int maxScore = 0;
+        if (questions.isEmpty()) {
+            System.out.println("No questions available in this quiz.");
+            return;
+        }
 
-        System.out.println("\nStarting Quiz: " + title + " for Course ID: " + courseId);
-        for (int i = 0; i < questions.size(); i++) {
-            System.out.println("\nQuestion " + (i + 1) + ":");
-            questions.get(i).printQuestion();
+        try (java.util.Scanner sc = new java.util.Scanner(System.in)) {
+            int totalScore = 0;
+            int maxScore = 0;
 
-            char ans;
-            while (true) {
-                System.out.print("Your answer (A/B/C/D): ");
-                String input = sc.next().trim().toUpperCase();
-                if (input.length() == 1 && "ABCD".contains(input)) {
-                    ans = input.charAt(0);
-                    break;
+            System.out.println("\nStarting Quiz: " + title + " for Course ID: " + courseId);
+            for (int i = 0; i < questions.size(); i++) {
+                System.out.println("\nQuestion " + (i + 1) + ":");
+                questions.get(i).printQuestion();
+
+                char ans;
+                while (true) {
+                    System.out.print("Your answer (A/B/C/D): ");
+                    String input = sc.next().trim().toUpperCase();
+                    if (input.length() == 1 && "ABCD".contains(input)) {
+                        ans = input.charAt(0);
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter A, B, C, or D.");
+                    }
+                }
+
+                maxScore += questions.get(i).getScore();
+
+                if (questions.get(i).isCorrect(ans)) {
+                    System.out.println("Correct! +" + questions.get(i).getScore() + " points");
+                    totalScore += questions.get(i).getScore();
                 } else {
-                    System.out.println("Invalid input. Please enter A, B, C, or D.");
+                    System.out.println("Wrong! Correct answer was: " + questions.get(i).getCorrectChoice());
                 }
             }
 
-            maxScore += questions.get(i).getScore();
-
-            if (questions.get(i).isCorrect(ans)) {
-                System.out.println("Correct! +" + questions.get(i).getScore() + " points");
-                totalScore += questions.get(i).getScore();
-            } else {
-                System.out.println("Wrong! Correct answer was: " + questions.get(i).correctChoice);
-            }
+            System.out.println("\nQuiz finished! Your score: " + totalScore + " out of " + maxScore);
         }
-
-        System.out.println("\nQuiz finished! Your score: " + totalScore + " out of " + maxScore);
-        sc.close();
     }
 
     public String getTitle() {
@@ -163,7 +168,6 @@ public class Quiz {
                 Question q = Question.fromFileFormat(data);
                 if (q != null) {
                     quiz.addQuestion(q);
-                    System.out.println("Loaded question: " + q.getQuestionText());
                 } else {
                     System.out.println("Skipping malformed question.");
                 }
