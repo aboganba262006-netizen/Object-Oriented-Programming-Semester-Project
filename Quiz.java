@@ -6,6 +6,53 @@ public class Quiz {
     int courseId; // Added courseId to link quiz to a course
     ArrayList<Question> questions;
 
+    static {
+        try {
+            BufferedReader quizReader = new BufferedReader(new FileReader("quizzes.txt"));
+            String line;
+            while ((line = quizReader.readLine()) != null) {
+                String[] quizData = line.split(";");
+                if (quizData.length >= 2) {
+                    int courseId = Integer.parseInt(quizData[0]);
+                    String quizTitle = quizData[1];
+                    Quiz quiz = new Quiz(quizTitle, courseId);
+                    Course course = Course.getCourses().stream()
+                        .filter(c -> c.getID() == courseId)
+                        .findFirst()
+                        .orElse(null);
+                    if (course != null) {
+                        course.addQuiz(quiz);
+                    }
+                }
+            }
+            quizReader.close();
+
+            BufferedReader questionReader = new BufferedReader(new FileReader("questions.txt"));
+            while ((line = questionReader.readLine()) != null) {
+                String[] questionData = line.split(";");
+                if (questionData.length >= 8) {
+                    int courseId = Integer.parseInt(questionData[0]);
+                    String quizTitle = questionData[1];
+                    Quiz quiz = Course.getCourses().stream()
+                        .filter(c -> c.getID() == courseId)
+                        .flatMap(c -> c.getQuizzes().stream())
+                        .filter(q -> q.getTitle().equalsIgnoreCase(quizTitle))
+                        .findFirst()
+                        .orElse(null);
+                    if (quiz != null) {
+                        Question question = Question.fromFileFormat(questionData);
+                        if (question != null) {
+                            quiz.addQuestion(question);
+                        }
+                    }
+                }
+            }
+            questionReader.close();
+        } catch (IOException e) {
+            System.out.println("Error loading quizzes or questions: " + e.getMessage());
+        }
+    }
+
     public Quiz(String title, int courseId) {
         this.title = title;
         this.courseId = courseId;

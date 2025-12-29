@@ -1,102 +1,118 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminGUI extends JFrame {
 
-    private Admin admin;
-    private DefaultListModel<Course> courseModel = new DefaultListModel<>();
-    private JList<Course> courseList = new JList<>(courseModel);
-
-    public AdminGUI(Admin admin) {
-        this.admin = admin;
-
+    public AdminGUI() {
         setTitle("Admin Panel");
-        setSize(500, 400);
-        setLocationRelativeTo(null);
+        setSize(400, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-        JButton addCourse = new JButton("Add Course");
-        JButton removeCourse = new JButton("Remove Course");
-        JButton addQuiz = new JButton("Add Quiz");
-        JButton addQuestion = new JButton("Add Question to Quiz");
+        // Create buttons for admin actions
+        JButton addCourseButton = new JButton("Add Course");
+        JButton removeCourseButton = new JButton("Remove Course");
+        JButton createQuizButton = new JButton("Create Quiz");
+        JButton backButton = new JButton("Back");
 
-        addCourse.addActionListener(e -> addCourse());
-        removeCourse.addActionListener(e -> removeCourse());
-        addQuiz.addActionListener(e -> addQuiz());
-        addQuestion.addActionListener(e -> addQuestionToQuiz());
+        // Add action listeners to buttons
+        addCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleAddCourse();
+            }
+        });
 
-        JPanel btnPanel = new JPanel();
-        btnPanel.add(addCourse);
-        btnPanel.add(removeCourse);
-        btnPanel.add(addQuiz);
-        btnPanel.add(addQuestion);
+        removeCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleRemoveCourse();
+            }
+        });
 
-        add(new JScrollPane(courseList), BorderLayout.CENTER);
-        add(btnPanel, BorderLayout.SOUTH);
+        createQuizButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleCreateQuiz();
+            }
+        });
 
-        refresh();
+        backButton.addActionListener(e -> {
+            dispose(); // Close the current window
+            new MainGUI(); // Navigate back to the Main GUI
+        });
+
+        // Set layout and add buttons
+        setLayout(new GridLayout(4, 1, 10, 10));
+        add(addCourseButton);
+        add(removeCourseButton);
+        add(createQuizButton);
+        add(backButton); // Add the back button to the layout
+
         setVisible(true);
     }
 
-    private void addCourse() {
-        String name = JOptionPane.showInputDialog(this, "Course name:");
-        if (name != null && !name.isEmpty()) {
-            Course c = new Course(name);
-            admin.addCourse(c);
-            refresh();
+    private void handleAddCourse() {
+        String courseName = JOptionPane.showInputDialog(this, "Enter course name:");
+        String courseId = JOptionPane.showInputDialog(this, "Enter course ID:");
+        String creditHours = JOptionPane.showInputDialog(this, "Enter credit hours:");
+
+        try {
+            Course.addCourse(courseName, Integer.parseInt(courseId), Double.parseDouble(creditHours));
+            JOptionPane.showMessageDialog(this, "Course added successfully.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error adding course: " + e.getMessage());
         }
     }
 
-    private void removeCourse() {
-        Course c = courseList.getSelectedValue();
-        if (c != null) {
-            admin.removeCourse(c);
-            refresh();
+    private void handleRemoveCourse() {
+        String courseId = JOptionPane.showInputDialog(this, "Enter course ID to remove:");
+
+        try {
+            Course courseToRemove = null;
+            for (Course c : Course.getCourses()) {
+                if (String.valueOf(c.getID()).equals(courseId)) {
+                    courseToRemove = c;
+                    break;
+                }
+            }
+
+            if (courseToRemove != null) {
+                Course.removeCourse(courseToRemove);
+                JOptionPane.showMessageDialog(this, "Course removed successfully.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Course not found.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error removing course: " + e.getMessage());
         }
     }
 
-    private void addQuiz() {
-        Course c = courseList.getSelectedValue();
-        if (c == null) return;
+    private void handleCreateQuiz() {
+        String courseId = JOptionPane.showInputDialog(this, "Enter course ID to create a quiz for:");
 
-        String title = JOptionPane.showInputDialog(this, "Quiz title:");
-        if (title != null) {
-            Quiz quiz = new Quiz(title, new ArrayList<Question>());
-            c.addQuiz(quiz);
-            JOptionPane.showMessageDialog(this, "Quiz added to course: " + c.getCourseName());
-        }
-    }
+        try {
+            Course selectedCourse = null;
+            for (Course c : Course.getCourses()) {
+                if (String.valueOf(c.getID()).equals(courseId)) {
+                    selectedCourse = c;
+                    break;
+                }
+            }
 
-    // Ensure the QuestionGUI is displayed properly when invoked
-    private void addQuestionToQuiz() {
-        Course c = courseList.getSelectedValue();
-        if (c == null || c.getQuizzes().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No quizzes available for the selected course.");
-            return;
-        }
+            if (selectedCourse == null) {
+                JOptionPane.showMessageDialog(this, "Course not found.");
+                return;
+            }
 
-        // Let the admin select a quiz to add questions to
-        Object[] quizArray = c.getQuizzes().toArray();
-        Quiz selectedQuiz = (Quiz) JOptionPane.showInputDialog(
-            this,
-            "Select a quiz:",
-            "Add Question to Quiz",
-            JOptionPane.PLAIN_MESSAGE,
-            null,
-            quizArray,
-            quizArray[0]
-        );
-
-        if (selectedQuiz != null) {
-            SwingUtilities.invokeLater(() -> new QuestionGUI(selectedQuiz));
-        }
-    }
-
-    private void refresh() {
-        courseModel.clear();
-        for (Course c : admin.getManagedCourses()) {
-            courseModel.addElement(c);
+            String quizTitle = JOptionPane.showInputDialog(this, "Enter quiz title:");
+            Quiz newQuiz = new Quiz(quizTitle, selectedCourse.getID());
+            selectedCourse.addQuiz(newQuiz);
+            JOptionPane.showMessageDialog(this, "Quiz created successfully.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error creating quiz: " + e.getMessage());
         }
     }
 }

@@ -69,4 +69,8 @@ public class Student extends Person {
             System.out.println("Error loading student's courses");
         }
     }
+
+    public ArrayList<Course> getMyCourses() {
+        return myCourses;
+    }
 }

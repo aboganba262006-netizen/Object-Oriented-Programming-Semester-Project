@@ -11,6 +11,10 @@ public class Course {
 
     private static ArrayList<Course> courses = new ArrayList<>();
 
+    static {
+        loadCoursesFromFile("courses.txt"); // Automatically load courses when the class is loaded
+    }
+
     public Course(String courseName, int ID, double creditHours) {
         this.courseName = courseName;
         this.ID = ID; // Updated to use String
