@@ -8,10 +8,10 @@ public class StudentGUI extends JFrame {
     public StudentGUI(Student student) {
         this.student = student;
 
-        System.out.println("Student logged in: " + student.getName()); // Explicitly reference the student field
+        System.out.println("Student logged in: " + student.getName());
 
         if (student.getMyCourses().isEmpty()) {
-            student.addCourse(Course.getCourses().get(0)); // Assign a default course for testing
+            student.addCourse(Course.getCourses().get(0)); 
         }
 
         setTitle("Student Dashboard");

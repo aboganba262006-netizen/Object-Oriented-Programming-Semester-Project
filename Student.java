@@ -23,7 +23,7 @@ public class Student extends Person {
     }
 
     public void removeCourse(Course c) {
-        myCourses.remove(c); // بس سطر واحد، شرط إن equals موجود في Course
+        myCourses.remove(c); 
     }
 
     public void printMyCourses() {
